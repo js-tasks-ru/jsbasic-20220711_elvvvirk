@@ -1,5 +1,5 @@
 function getMinMax(str) {
-  result = {}
+  const result = {}
   let arr = str.split(" ")
   let arrNumbers = arr.filter(item => isFinite(item)).map(item => parseFloat(item))
   result.min = arrNumbers.reduce((min, current) => {
