@@ -81,15 +81,8 @@ export default class Carousel {
   #onButtonCarouselClick = (event) => {
     const clickEvent = new CustomEvent("product-add",  {
       bubbles: true,
-      detail: event.currentTarget.closest('.carousel__slide').getAttribute('data-id'),
+      detail: event.currentTarget.closest('.carousel__slide').dataset.id
     });
     this.#parent.dispatchEvent(clickEvent);
   }
 }
-
-document.addEventListener('product-add', (event) => {
-  console.log(event)
-  if (event.detail){
-    alert(`Товар: ${event.detail} добавлен`)
-  }
-})

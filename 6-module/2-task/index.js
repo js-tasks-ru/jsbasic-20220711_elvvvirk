@@ -39,9 +39,3 @@ export default class ProductCard {
   `
   };
 }
-document.body.addEventListener('product-add', (event) => {
-  console.log(event)
-  if (event.detail){
-    alert(`Товар: ${event.detail} добавлен`)
-  }
-})
