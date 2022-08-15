@@ -1,8 +1,7 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
-  #parent = null
-
+  #modal = null
   constructor() {
     this.render()
   }
@@ -33,37 +32,31 @@ export default class Modal {
     </div>`
 }
 render(){
-    this.#parent = document.querySelector('body')
-    const elem = createElement(this.#html())
-    this.#parent.append(elem)
-    this.#parent.classList.add('is-modal-open')
-    this.#parent.querySelector('.modal__close').addEventListener('click', () => this.close())
-    this.#parent.addEventListener('keydown', this.escape)
+    this.#modal = createElement(this.#html())
+    document.querySelector('body').append(this.#modal)
+    document.querySelector('body').classList.add('is-modal-open')
+    this.#modal.querySelector('.modal__close').addEventListener('click', () => this.close())
+    document.addEventListener('keydown', this.escape)
 }
 open() {
-    return this.#parent
+    return this.#modal
 }
 setTitle (title){
-  this.#parent.querySelector('.modal__title').innerHTML = title
+  this.#modal.querySelector('.modal__title').innerHTML = title
 }
 setBody (node) {
-  const child = this.#parent.querySelector('.modal__body').lastChild
-  console.log(child)
-  child.replaceWith(node)
-  // this.#parent.querySelector('.modal__body').innerHTML= node.textContent
+  const modalBody = this.#modal.querySelector('.modal__body')
+  modalBody.innerHTML = ''
+  modalBody.append(node)
 }
 close(){
-  if (this.#parent.querySelector('.modal')) {
-    this.#parent.querySelector('.modal').remove()
-  }
-  this.#parent.classList.remove('is-modal-open')
+  this.#modal.remove()
+  document.querySelector('body').classList.remove('is-modal-open')
 }
 escape = (event) => {
   if (event.code === 'Escape') {
-    if (this.#parent.querySelector('.modal')) {
-      this.#parent.querySelector('.modal').remove()
-    }
-    this.#parent.classList.remove('is-modal-open')
+    this.#modal.remove()
+    document.querySelector('body').classList.remove('is-modal-open')
   }
 }
 }

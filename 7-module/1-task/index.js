@@ -2,7 +2,6 @@ import createElement from '../../assets/lib/create-element.js';
 
 export default class RibbonMenu {
   #parent = null;
-
   constructor(categories) {
     this.categories = categories;
     this.render();
