@@ -33,13 +33,12 @@ export default class Modal {
 }
 render(){
     this.#modal = createElement(this.#html())
-    document.querySelector('body').append(this.#modal)
-    document.querySelector('body').classList.add('is-modal-open')
-    this.#modal.querySelector('.modal__close').addEventListener('click', () => this.close())
-    document.addEventListener('keydown', this.escape)
 }
 open() {
-    return this.#modal
+  document.querySelector('body').append(this.#modal)
+  document.querySelector('body').classList.add('is-modal-open')
+  this.#modal.querySelector('.modal__close').addEventListener('click', () => this.close())
+  document.addEventListener('keydown', this.escape)
 }
 setTitle (title){
   this.#modal.querySelector('.modal__title').innerHTML = title
