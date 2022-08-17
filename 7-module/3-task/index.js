@@ -4,7 +4,6 @@ export default class StepSlider {
   position = 0
   #container = null
   stepsElem = ''
-  spanCount = 0
   sliderSteps = null
   constructor({ steps, value = 0 }) {
     this.steps = steps
@@ -46,7 +45,6 @@ export default class StepSlider {
     let point= event.clientX -this.#container.getBoundingClientRect().left
     this.position = Math.round(point/segmentsLenght)
     let perc = this.position/(this.steps-1)*100
-    this.spanCount = this.position + 1
 
     this.#container.querySelector('.slider__value').innerHTML = this.position
 
@@ -54,7 +52,7 @@ export default class StepSlider {
     this.#container.querySelector('.slider__progress').style.width = `${perc}%`
     this.sliderSteps = this.#container.querySelector('.slider__steps')
     if (!this.sliderSteps.querySelector('.slider__step-active')) {
-      this.sliderSteps.childNodes[this.spanCount].classList.add('slider__step-active')
+      this.sliderSteps.childNodes[this.position].classList.add('slider__step-active')
     }
     else {
       this.sliderSteps.querySelector('.slider__step-active').classList.remove('slider__step-active')
