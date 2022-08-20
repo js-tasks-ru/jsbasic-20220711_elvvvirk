@@ -1,12 +1,9 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class StepSlider {
-  position = 0
   #container = null
   stepsElem = ''
-  sliderSteps = null
-  thumb = null
-  slider = null
+  leftRelative = 0
   constructor({ steps, value = 0 }) {
     this.steps = steps
     this.value = value
@@ -18,9 +15,11 @@ export default class StepSlider {
   };
   render(){
     this.#container = createElement(this.#html())
-    this.thumb = this.#container.querySelector('.slider__thumb')
-    this.thumb.ondragstart =  () => false
-    this.thumb.addEventListener('pointerdown', this.moveSlider)
+    this.perc = this.value/(this.steps-1)*100
+    this.#changeSlider()
+    this.#container.ondragstart =  () => false
+    this.#container.addEventListener('pointerdown', this.moveSlider)
+    this.#container.addEventListener('click', this.#onSlider)
   };
   #html(){
     for (let i = 1; i <= this.steps; i++){
@@ -41,11 +40,8 @@ export default class StepSlider {
       </div>
     </div>`
   };
-
   moveSlider = () => {
     const onMove = (event) => {
-      this.#container.classList.add('slider_dragging')
-
       let left= event.clientX -this.#container.getBoundingClientRect().left
       let leftRelative = left / this.#container.offsetWidth
 
@@ -55,33 +51,52 @@ export default class StepSlider {
       if (leftRelative > 1) {
         leftRelative = 1
       }
-      let leftPercents = leftRelative *100
-      this.#container.querySelector('.slider__thumb').style.left = `${leftPercents}%`
-      this.#container.querySelector('.slider__progress').style.width = `${leftPercents}%`
+      this.perc = leftRelative *100
+      this.value = Math.round(leftRelative * (this.steps - 1))
 
-      this.position = Math.round(leftRelative * (this.steps - 1))
-      this.#container.querySelector('.slider__value').innerHTML = this.position
-
-      this.sliderSteps = this.#container.querySelector('.slider__steps')
-        if (!this.sliderSteps.querySelector('.slider__step-active')) {
-          this.sliderSteps.childNodes[this.position].classList.add('slider__step-active')
-        }
-        else {
-          this.sliderSteps.querySelector('.slider__step-active').classList.remove('slider__step-active')
-          this.sliderSteps.childNodes[this.position].classList.add('slider__step-active')
-        }
-      const sliderChange = new CustomEvent('slider-change', {
-        bubbles: true,
-        detail: this.position
-      })
-      this.#container.dispatchEvent(sliderChange);
+      this.#container.classList.add('slider_dragging')
+      this.#changeSlider()
     }
 
     document.addEventListener('pointermove', onMove)
     document.addEventListener('pointerup', () => {
       document.removeEventListener('pointermove', onMove);
-      this.#container.classList.remove('slider_dragging')
+      this.#container.classList.remove('slider_dragging');
+      const dragChange = new CustomEvent('slider-change', {
+        bubbles: true,
+        detail: this.value
+      })
+      this.#container.dispatchEvent(dragChange);
     }, { once: true})
   }
+  #changeSlider = () =>{
+    this.#container.querySelector('.slider__value').innerHTML = this.value
+    this.#container.querySelector('.slider__thumb').style.left = `${this.perc}%`
+    this.#container.querySelector('.slider__progress').style.width = `${this.perc}%`
+    this.sliderSteps = this.#container.querySelector('.slider__steps')
+    if (!this.sliderSteps.querySelector('.slider__step-active')) {
+      this.sliderSteps.childNodes[this.value].classList.add('slider__step-active')
+      }
+    else {
+      this.sliderSteps.querySelector('.slider__step-active').classList.remove('slider__step-active')
+      this.sliderSteps.childNodes[this.value].classList.add('slider__step-active')
+      }
+    }
+
+    #onSlider = (event) => {
+      const width = this.#container.offsetWidth
+      const segmentsLenght = width/(this.steps-1)
+      let point= event.clientX -this.#container.getBoundingClientRect().left
+      this.value = Math.round(point/segmentsLenght)
+      this.perc = this.value/(this.steps-1)*100
+
+      this.#changeSlider()
+  
+      const sliderChange = new CustomEvent('slider-change', {
+        bubbles: true,
+        detail: this.value
+      })
+      this.#container.dispatchEvent(sliderChange);
+    }
 
 }
