@@ -39,6 +39,47 @@ export default class CartIcon {
   }
 
   updatePosition() {
-    // ваш код ...
+    // позицирование по Y
+
+    let isMobile = document.documentElement.clientWidth <= 767;
+
+// Если условие выполняется, обнуляем стили к исходным
+  if (document.documentElement.clientWidth <= 767) {
+    Object.assign(this.elem.style, {
+      position: '',
+      top: '',
+      left: '',
+      zIndex: ''
+    });
+  } else
+    if (this.elem.offsetWidth != 0  && this.elem.offsetHeight != 0){
+      let topCoord = this.elem.getBoundingClientRect().top +window.pageYOffset;
+      console.log(topCoord, window.pageYOffset)
+          //позиционирование по X    
+    let leftCoord = Math.min(
+      document.querySelector('.container').getBoundingClientRect().right + 20,
+      document.documentElement.clientWidth - this.elem.offsetWidth - 10
+    ) + 'px'
+
+      if (window.pageYOffset > topCoord){
+        Object.assign(this.elem.style, {
+          position: 'fixed',
+          top: '50px',
+          zIndex: 1e3,
+          right: '10px',
+          left: leftCoord
+        });
+        console.log(document.querySelector('.container').getBoundingClientRect().right, leftCoord)
+      }
+      else 
+      Object.assign(this.elem.style, {
+        position: '',
+        top: '',
+        left: '',
+        zIndex: ''
+      });
+    }
+
+
   }
 }
