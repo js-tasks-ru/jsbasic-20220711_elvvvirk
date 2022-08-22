@@ -42,6 +42,9 @@ export default class CartIcon {
     // позицирование по Y
 
     let isMobile = document.documentElement.clientWidth <= 767;
+    if (!this.initialTopCoord) {
+      this.initialTopCoord = this.elem.getBoundingClientRect().top + window.pageYOffset;
+    }
 
 // Если условие выполняется, обнуляем стили к исходным
   if (document.documentElement.clientWidth <= 767) {
@@ -53,8 +56,7 @@ export default class CartIcon {
     });
   } else
     if (this.elem.offsetWidth != 0  && this.elem.offsetHeight != 0){
-      let topCoord = this.elem.getBoundingClientRect().top +window.pageYOffset;
-      console.log(topCoord, window.pageYOffset)
+      let topCoord = this.initialTopCoord;
           //позиционирование по X    
     let leftCoord = Math.min(
       document.querySelector('.container').getBoundingClientRect().right + 20,
