@@ -35,6 +35,7 @@ export default class Cart {
     }
     if (cartItem.count == 0) {
       this.cartItems.pop(cartItem)
+      cartItem = {}
     }
 
     this.onProductUpdate(cartItem)
